@@ -1,0 +1,19 @@
+
+Wollmers::Utf8::XS implements UTF-8 methods.
+
+INSTALLATION
+
+To install this module type the following:
+
+   perl Makefile.PL
+   make
+   make test
+   make install
+
+COPYRIGHT AND LICENCE
+
+Copyright (C) 2022 Helmut Wollmersdorfer
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself. 
+
