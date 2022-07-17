@@ -84,8 +84,8 @@ cp_utf8_chars (const uint8_t * buf, size_t len) {
 
 		// Is this byte NOT the first byte of a character?
 
-		// continuations += (byte >> 7) & ((byte) >> 6); // 4, bitops variant
-		if((signed)byte <= -65) { continuations++; } // 2, comparison variant
+		continuations += (byte >> 7) & ((~byte) >> 6); // 4, bitops variant
+		// if((signed)byte <= -65) { continuations++; } // 2, comparison variant
 		offset++; // 1
 	}
 

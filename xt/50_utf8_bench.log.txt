@@ -1,0 +1,33 @@
+utf8-bench/xt$ time perl 50_utf8_bench.t
+
+$octets: Abcdefg chars: 7 bytes 7
+               Rate jb_chars cp_chars sc_chars
+jb_chars 15249722/s       --     -15%     -22%
+cp_chars 17990275/s      18%       --      -7%
+sc_chars 19435213/s      27%       8%       --
+
+$octets: Abcdefgh chars: 8 bytes 8
+               Rate jb_chars cp_chars sc_chars
+jb_chars 15165355/s       --     -22%     -23%
+cp_chars 19435213/s      28%       --      -1%
+sc_chars 19625754/s      29%       1%       --
+ok 1 - jb_chars [Chſerſplzon] -> 11
+ok 2 - cp_chars [Chſerſplzon] -> 11
+ok 3 - sc_chars [Chſerſplzon] -> 11
+
+$octets: Chſerſplzon chars: 11 bytes 13
+               Rate jb_chars sc_chars cp_chars
+jb_chars 14115446/s       --     -22%     -24%
+sc_chars 18168396/s      29%       --      -2%
+cp_chars 18588392/s      32%       2%       --
+
+$octets: राज्यराज्य chars: 9 bytes 27
+               Rate jb_chars sc_chars cp_chars
+jb_chars 14563556/s       --     -14%     -19%
+sc_chars 16990814/s      17%       --      -5%
+cp_chars 17873454/s      23%       5%       --
+1..3
+
+real	0m53.298s
+user	0m53.235s
+sys	0m0.049s

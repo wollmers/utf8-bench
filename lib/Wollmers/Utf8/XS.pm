@@ -16,7 +16,7 @@ require DynaLoader;
 use Autoloader;
 
 our @ISA = qw(Exporter DynaLoader);
-our @EXPORT = qw( distance simple distance_arr toucs);
+our @EXPORT = qw( jb_chars cp_chars sc_chars );
 bootstrap Wollmers::Utf8::XS $VERSION;
 
 
@@ -26,11 +26,14 @@ __END__
 
 =head1 NAME
 
-Wollmers::Utf8::XS - Fast XXX
+Wollmers::Utf8::XS - Fast support of UTF-8
 
 =head1 SYNOPSIS
 
+  use utf8; # literals are in UTF-8
   use Wollmers::Utf8::XS;
+
+  my $characters = '';
 
 
 =head1 DESCRIPTION
@@ -51,7 +54,13 @@ call.
 
 =over 4
 
-=item foo($a,$b)
+=item jb_chars($string)
+
+Uses lookup table for calculating the number of characters.
+
+=item cp_chars($string)
+
+Uses lookup table.
 
 Calculates
 
@@ -71,11 +80,11 @@ major versions.
 
 =head1 SEE ALSO
 
-Text::Levenshtein
+XXX
 
 =head1 BUGS
 
-Does not compile on Windows and Sun.
+Does not XXX.
 
 =head1 AUTHOR
 

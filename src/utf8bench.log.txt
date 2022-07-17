@@ -46,6 +46,7 @@ real	0m2.229s
 user	0m2.093s
 sys	0m0.004s
 
+# 2. approach
 ### variant of sc_utf8_chars() counting continuations (slightly faster)
 utf8-bench/src$ date; make clean; make; time ./utf8bench
 So 17 Jul 2022 09:45:37 CEST
