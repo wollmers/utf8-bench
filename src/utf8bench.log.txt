@@ -1,0 +1,47 @@
+# 1. approach
+utf8-bench/src$ date; make clean; make; time ./utf8bench
+So 17 Jul 2022 09:11:37 CEST
+rm -rf *.o utf8bench
+cc -std=c99 -pedantic -Wall -O3 -c -o utf8bench.o utf8bench.c 
+cc -std=c99 -pedantic -Wall -O3 -o utf8bench utf8bench.o	
+[jb_ascii_l7] bytes: 7 chars: 7 expect: 7
+[jb_ascii_l8] bytes: 8 chars: 8 expect: 8
+[jb_ascii_10] bytes: 10 chars: 10 expect: 10
+[jb_utf8_10]  bytes: 11 chars: 10 expect: 10
+[cp_ascii_10] bytes: 10 chars: 10 expect: 10
+[cp_utf8_10]  bytes: 11 chars: 10 expect: 10
+[sc_ascii_10] bytes: 10 chars: 10 expect: 10
+[sc_utf8_10]  bytes: 11 chars: 10 expect: 10
+[jb_ascii_52] bytes: 52 chars: 52 expect: 52
+[jb_utf8_52]  bytes: 58 chars: 52 expect: 52
+[jb_utf8_104] bytes: 116 chars: 104 expect: 104
+[cp_ascii_52] bytes: 52 chars: 52 expect: 52
+[cp_utf8_52]  bytes: 58 chars: 52 expect: 52
+[sc_ascii_52] bytes: 52 chars: 52 expect: 52
+[sc_utf8_52]  bytes: 58 chars: 52 expect: 52
+[jb_ascii_l7] iters: 100 M s: 0.457142 Mops/s: 218.8 Mchr/s: 1531.3 7
+[jb_ascii_l8] iters: 100 M s: 0.011773 Mops/s: 8494.0 Mchr/s: 67952.1 8
+[jb_ascii_10] iters: 100 M s: 0.011210 Mops/s: 8920.6 Mchr/s: 89206.1 10
+[jb_utf_10]   iters: 100 M s: 0.011534 Mops/s: 8670.0 Mchr/s: 86700.2 10
+[jb_ascii_52] iters: 100 M s: 0.011752 Mops/s: 8509.2 Mchr/s: 442477.9 52
+[jb_utf_52]   iters: 100 M s: 0.011193 Mops/s: 8934.2 Mchr/s: 464576.1 52
+[jb_utf_104]  iters: 2 M s: 0.574656 Mops/s: 3.5 Mchr/s: 362.0 104
+[cp_ascii_l7] iters: 100 M s: 0.507147 Mops/s: 197.2 Mchr/s: 1380.3 7
+[cp_ascii_l8] iters: 100 M s: 0.010665 Mops/s: 9376.5 Mchr/s: 75011.7 8
+[cp_ascii_10] iters: 100 M s: 0.010572 Mops/s: 9458.9 Mchr/s: 94589.5 10
+[cp_utf_10]   iters: 100 M s: 0.010667 Mops/s: 9374.7 Mchr/s: 93747.1 10
+[cp_ascii_52] iters: 100 M s: 0.011521 Mops/s: 8679.8 Mchr/s: 451349.7 52
+[cp_utf_52]   iters: 100 M s: 0.010966 Mops/s: 9119.1 Mchr/s: 474193.0 52
+[cp_utf_104]  iters: 100 M s: 0.012378 Mops/s: 8078.8 Mchr/s: 840200.4 104
+[sc_ascii_l7] iters: 100 M s: 0.363416 Mops/s: 275.2 Mchr/s: 1926.2 7
+[sc_ascii_l8] iters: 100 M s: 0.011478 Mops/s: 8712.3 Mchr/s: 69698.6 8
+[sc_ascii_10] iters: 100 M s: 0.011562 Mops/s: 8649.0 Mchr/s: 86490.2 10
+[sc_utf_10]   iters: 100 M s: 0.011213 Mops/s: 8918.2 Mchr/s: 89182.2 10
+[sc_ascii_52] iters: 100 M s: 0.011226 Mops/s: 8907.9 Mchr/s: 463210.4 52
+[sc_utf_52]   iters: 100 M s: 0.011255 Mops/s: 8884.9 Mchr/s: 462016.9 52
+[sc_utf_104]  iters: 100 M s: 0.012208 Mops/s: 8191.3 Mchr/s: 851900.4 104
+Total: 2.095534 seconds
+
+real	0m2.229s
+user	0m2.093s
+sys	0m0.004s
