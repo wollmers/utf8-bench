@@ -83,7 +83,9 @@ cp_utf8_chars (const uint8_t * buf, size_t len) {
 		uint8_t byte = buf[offset]; // 1
 
 		// Is this byte NOT the first byte of a character?
-		continuations += (byte >> 7) & ((byte) >> 6); // 4
+
+		// continuations += (byte >> 7) & ((byte) >> 6); // 4, bitops variant
+		if((signed)byte <= -65) { continuations++; } // 2, comparison variant
 		offset++; // 1
 	}
 
@@ -97,7 +99,8 @@ https://github.com/simdutf/simdutf/blob/master/src/scalar/utf8.h
 original utf32_length_from_utf8()
 */
 
-
+/*
+// variant counting code points
 static size_t
 sc_utf8_chars (const char * buf, size_t len) {
     size_t counter = 0;
@@ -109,7 +112,21 @@ sc_utf8_chars (const char * buf, size_t len) {
     }
     return counter;
 }
+*/
 
+// variant counting continuations
+static size_t
+sc_utf8_chars (const char * buf, size_t len) {
+    // size_t counter = 0;
+    size_t continuations = 0;
+
+    // O(n * 4)
+    for (size_t i = 0; i < len; i++) { // 2
+        // -65 is 0b10111111, anything larger in two-complement's should start a new code point.
+        if(buf[i] <= -65) { continuations++; } // 2
+    }
+    return (len - continuations);
+}
 
 /*
 https://github.com/simdutf/simdutf/blob/master/src/scalar/utf8_to_utf32/valid_utf8_to_utf32.h

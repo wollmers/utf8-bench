@@ -19,13 +19,13 @@ cc -std=c99 -pedantic -Wall -O3 -o utf8bench utf8bench.o
 [cp_utf8_52]  bytes: 58 chars: 52 expect: 52
 [sc_ascii_52] bytes: 52 chars: 52 expect: 52
 [sc_utf8_52]  bytes: 58 chars: 52 expect: 52
-[jb_ascii_l7] iters: 100 M s: 0.457142 Mops/s: 218.8 Mchr/s: 1531.3 7
-[jb_ascii_l8] iters: 100 M s: 0.011773 Mops/s: 8494.0 Mchr/s: 67952.1 8
+[jb_ascii_l7] iters: 100 M s: 0.457142 Mops/s: 218.8 Mchr/s: 1531.3 7 # unrolled loop?
+[jb_ascii_l8] iters: 100 M s: 0.011773 Mops/s: 8494.0 Mchr/s: 67952.1 8 # unrolled loop?
 [jb_ascii_10] iters: 100 M s: 0.011210 Mops/s: 8920.6 Mchr/s: 89206.1 10
 [jb_utf_10]   iters: 100 M s: 0.011534 Mops/s: 8670.0 Mchr/s: 86700.2 10
 [jb_ascii_52] iters: 100 M s: 0.011752 Mops/s: 8509.2 Mchr/s: 442477.9 52
 [jb_utf_52]   iters: 100 M s: 0.011193 Mops/s: 8934.2 Mchr/s: 464576.1 52
-[jb_utf_104]  iters: 2 M s: 0.574656 Mops/s: 3.5 Mchr/s: 362.0 104
+[jb_utf_104]  iters: 2 M s: 0.574656 Mops/s: 3.5 Mchr/s: 362.0 104 # cache misses?
 [cp_ascii_l7] iters: 100 M s: 0.507147 Mops/s: 197.2 Mchr/s: 1380.3 7
 [cp_ascii_l8] iters: 100 M s: 0.010665 Mops/s: 9376.5 Mchr/s: 75011.7 8
 [cp_ascii_10] iters: 100 M s: 0.010572 Mops/s: 9458.9 Mchr/s: 94589.5 10
@@ -44,4 +44,198 @@ Total: 2.095534 seconds
 
 real	0m2.229s
 user	0m2.093s
+sys	0m0.004s
+
+### variant of sc_utf8_chars() counting continuations (slightly faster)
+utf8-bench/src$ date; make clean; make; time ./utf8bench
+So 17 Jul 2022 09:45:37 CEST
+rm -rf *.o utf8bench
+cc -std=c99 -pedantic -Wall -O3 -c -o utf8bench.o utf8bench.c 
+cc -std=c99 -pedantic -Wall -O3 -o utf8bench utf8bench.o	
+[jb_ascii_l7] bytes: 7 chars: 7 expect: 7
+[jb_ascii_l8] bytes: 8 chars: 8 expect: 8
+[jb_ascii_10] bytes: 10 chars: 10 expect: 10
+[jb_utf8_10]  bytes: 11 chars: 10 expect: 10
+[cp_ascii_10] bytes: 10 chars: 10 expect: 10
+[cp_utf8_10]  bytes: 11 chars: 10 expect: 10
+[sc_ascii_10] bytes: 10 chars: 10 expect: 10
+[sc_utf8_10]  bytes: 11 chars: 10 expect: 10
+[jb_ascii_52] bytes: 52 chars: 52 expect: 52
+[jb_utf8_52]  bytes: 58 chars: 52 expect: 52
+[jb_utf8_104] bytes: 116 chars: 104 expect: 104
+[cp_ascii_52] bytes: 52 chars: 52 expect: 52
+[cp_utf8_52]  bytes: 58 chars: 52 expect: 52
+[sc_ascii_52] bytes: 52 chars: 52 expect: 52
+[sc_utf8_52]  bytes: 58 chars: 52 expect: 52
+[jb_ascii_l7] iters: 100 M s: 0.456613 Mops/s: 219.0 Mchr/s: 1533.0 7
+[jb_ascii_l8] iters: 100 M s: 0.010911 Mops/s: 9165.1 Mchr/s: 73320.5 8
+[jb_ascii_10] iters: 100 M s: 0.010800 Mops/s: 9259.3 Mchr/s: 92592.6 10
+[jb_utf_10]   iters: 100 M s: 0.010845 Mops/s: 9220.8 Mchr/s: 92208.4 10
+[jb_ascii_52] iters: 100 M s: 0.010940 Mops/s: 9140.8 Mchr/s: 475319.9 52
+[jb_utf_52]   iters: 100 M s: 0.011021 Mops/s: 9073.6 Mchr/s: 471826.5 52
+[jb_utf_104]  iters: 2 M s: 0.558296 Mops/s: 3.6 Mchr/s: 372.6 104
+[cp_ascii_l7] iters: 100 M s: 0.406716 Mops/s: 245.9 Mchr/s: 1721.1 7
+[cp_ascii_l8] iters: 100 M s: 0.010690 Mops/s: 9354.5 Mchr/s: 74836.3 8
+[cp_ascii_10] iters: 100 M s: 0.010632 Mops/s: 9405.6 Mchr/s: 94055.7 10
+[cp_utf_10]   iters: 100 M s: 0.010587 Mops/s: 9445.5 Mchr/s: 94455.5 10
+[cp_ascii_52] iters: 100 M s: 0.011039 Mops/s: 9058.8 Mchr/s: 471057.2 52
+[cp_utf_52]   iters: 100 M s: 0.011315 Mops/s: 8837.8 Mchr/s: 459566.9 52
+[cp_utf_104]  iters: 100 M s: 0.011164 Mops/s: 8957.4 Mchr/s: 931565.7 104
+[sc_ascii_l7] iters: 100 M s: 0.350568 Mops/s: 285.3 Mchr/s: 1996.8 7
+[sc_ascii_l8] iters: 100 M s: 0.010681 Mops/s: 9362.4 Mchr/s: 74899.4 8
+[sc_ascii_10] iters: 100 M s: 0.011242 Mops/s: 8895.2 Mchr/s: 88952.1 10
+[sc_utf_10]   iters: 100 M s: 0.010769 Mops/s: 9285.9 Mchr/s: 92859.1 10
+[sc_ascii_52] iters: 100 M s: 0.011045 Mops/s: 9053.9 Mchr/s: 470801.3 52
+[sc_utf_52]   iters: 100 M s: 0.011109 Mops/s: 9001.7 Mchr/s: 468088.9 52
+[sc_utf_104]  iters: 100 M s: 0.011783 Mops/s: 8486.8 Mchr/s: 882627.5 104
+Total: 1.958766 seconds
+
+real	0m2.214s
+user	0m1.959s
+sys	0m0.002s
+
+### variant of cp_utf8_chars() using comparison of sc_utf8_chars()
+
+utf8-bench/src$ date; make clean; make; time ./utf8bench
+So 17 Jul 2022 10:00:05 CEST
+rm -rf *.o utf8bench
+cc -std=c99 -pedantic -Wall -O3 -c -o utf8bench.o utf8bench.c 
+cc -std=c99 -pedantic -Wall -O3 -o utf8bench utf8bench.o	
+[jb_ascii_l7] bytes: 7 chars: 7 expect: 7
+[jb_ascii_l8] bytes: 8 chars: 8 expect: 8
+[jb_ascii_10] bytes: 10 chars: 10 expect: 10
+[jb_utf8_10]  bytes: 11 chars: 10 expect: 10
+[cp_ascii_10] bytes: 10 chars: 10 expect: 10
+[cp_utf8_10]  bytes: 11 chars: 10 expect: 10
+[sc_ascii_10] bytes: 10 chars: 10 expect: 10
+[sc_utf8_10]  bytes: 11 chars: 10 expect: 10
+[jb_ascii_52] bytes: 52 chars: 52 expect: 52
+[jb_utf8_52]  bytes: 58 chars: 52 expect: 52
+[jb_utf8_104] bytes: 116 chars: 104 expect: 104
+[cp_ascii_52] bytes: 52 chars: 52 expect: 52
+[cp_utf8_52]  bytes: 58 chars: 52 expect: 52
+[sc_ascii_52] bytes: 52 chars: 52 expect: 52
+[sc_utf8_52]  bytes: 58 chars: 52 expect: 52
+[jb_ascii_l7] iters: 100 M s: 0.475365 Mops/s: 210.4 Mchr/s: 1472.6 7
+[jb_ascii_l8] iters: 100 M s: 0.011313 Mops/s: 8839.4 Mchr/s: 70715.1 8
+[jb_ascii_10] iters: 100 M s: 0.011417 Mops/s: 8758.9 Mchr/s: 87588.7 10
+[jb_utf_10]   iters: 100 M s: 0.011878 Mops/s: 8418.9 Mchr/s: 84189.3 10
+[jb_ascii_52] iters: 100 M s: 0.011488 Mops/s: 8704.7 Mchr/s: 452646.2 52
+[jb_utf_52]   iters: 100 M s: 0.011565 Mops/s: 8646.8 Mchr/s: 449632.5 52
+[jb_utf_104]  iters: 2 M s: 0.555829 Mops/s: 3.6 Mchr/s: 374.2 104
+[cp_ascii_l7] iters: 100 M s: 0.010904 Mops/s: 9170.9 Mchr/s: 64196.6 7 # was Mchr/s: 1721.1
+[cp_ascii_l8] iters: 100 M s: 0.010638 Mops/s: 9400.3 Mchr/s: 75202.1 8
+[cp_ascii_10] iters: 100 M s: 0.011248 Mops/s: 8890.5 Mchr/s: 88904.7 10
+[cp_utf_10]   iters: 100 M s: 0.011744 Mops/s: 8515.0 Mchr/s: 93664.9 10
+[cp_ascii_52] iters: 100 M s: 0.012186 Mops/s: 8206.1 Mchr/s: 426719.2 52
+[cp_utf_52]   iters: 100 M s: 0.012949 Mops/s: 7722.6 Mchr/s: 401575.4 52
+[cp_utf_104]  iters: 100 M s: 0.011160 Mops/s: 8960.6 Mchr/s: 931899.6 104
+[sc_ascii_l7] iters: 100 M s: 0.360572 Mops/s: 277.3 Mchr/s: 1941.4 7
+[sc_ascii_l8] iters: 100 M s: 0.010739 Mops/s: 9311.9 Mchr/s: 74494.8 8
+[sc_ascii_10] iters: 100 M s: 0.010613 Mops/s: 9422.4 Mchr/s: 94224.1 10
+[sc_utf_10]   iters: 100 M s: 0.010749 Mops/s: 9303.2 Mchr/s: 93031.9 10
+[sc_ascii_52] iters: 100 M s: 0.011101 Mops/s: 9008.2 Mchr/s: 468426.3 52
+[sc_utf_52]   iters: 100 M s: 0.010978 Mops/s: 9109.1 Mchr/s: 473674.6 52
+[sc_utf_104]  iters: 100 M s: 0.012412 Mops/s: 8056.7 Mchr/s: 837898.8 104
+Total: 1.596848 seconds
+
+real	0m1.730s
+user	0m1.597s
+sys	0m0.003s
+
+# with flag O1
+utf8-bench/src$ date; make clean; make; time ./utf8bench
+So 17 Jul 2022 12:43:38 CEST
+rm -rf *.o utf8bench
+cc -std=c99 -pedantic -Wall -O1 -c -o utf8bench.o utf8bench.c 
+cc -std=c99 -pedantic -Wall -O1 -o utf8bench utf8bench.o	
+[jb_ascii_l7] bytes: 7 chars: 7 expect: 7
+[jb_ascii_l8] bytes: 8 chars: 8 expect: 8
+[jb_ascii_10] bytes: 10 chars: 10 expect: 10
+[jb_utf8_10]  bytes: 11 chars: 10 expect: 10
+[cp_ascii_10] bytes: 10 chars: 10 expect: 10
+[cp_utf8_10]  bytes: 11 chars: 10 expect: 10
+[sc_ascii_10] bytes: 10 chars: 10 expect: 10
+[sc_utf8_10]  bytes: 11 chars: 10 expect: 10
+[jb_ascii_52] bytes: 52 chars: 52 expect: 52
+[jb_utf8_52]  bytes: 58 chars: 52 expect: 52
+[jb_utf8_104] bytes: 116 chars: 104 expect: 104
+[cp_ascii_52] bytes: 52 chars: 52 expect: 52
+[cp_utf8_52]  bytes: 58 chars: 52 expect: 52
+[sc_ascii_52] bytes: 52 chars: 52 expect: 52
+[sc_utf8_52]  bytes: 58 chars: 52 expect: 52
+[jb_ascii_l7] iters: 100 M s: 0.531264 Mops/s: 188.2 Mchr/s: 1317.6 7
+[jb_ascii_l8] iters: 100 M s: 0.627030 Mops/s: 159.5 Mchr/s: 1275.9 8
+[jb_ascii_10] iters: 100 M s: 0.818320 Mops/s: 122.2 Mchr/s: 1222.0 10
+[jb_utf_10]   iters: 100 M s: 0.803788 Mops/s: 124.4 Mchr/s: 1244.1 10
+[jb_ascii_52] iters: 100 M s: 9.580551 Mops/s: 10.4 Mchr/s: 542.8 52
+[jb_utf_52]   iters: 100 M s: 9.621064 Mops/s: 10.4 Mchr/s: 540.5 52
+[jb_utf_104]  iters: 2 M s: 0.543372 Mops/s: 3.7 Mchr/s: 382.8 104
+[cp_ascii_l7] iters: 100 M s: 0.140800 Mops/s: 710.2 Mchr/s: 4971.6 7
+[cp_ascii_l8] iters: 100 M s: 0.186385 Mops/s: 536.5 Mchr/s: 4292.2 8
+[cp_ascii_10] iters: 100 M s: 0.269250 Mops/s: 371.4 Mchr/s: 3714.0 10
+[cp_utf_10]   iters: 100 M s: 0.254693 Mops/s: 392.6 Mchr/s: 4318.9 10
+[cp_ascii_52] iters: 100 M s: 0.620334 Mops/s: 161.2 Mchr/s: 8382.6 52
+[cp_utf_52]   iters: 100 M s: 0.704384 Mops/s: 142.0 Mchr/s: 7382.3 52
+[cp_utf_104]  iters: 100 M s: 1.279760 Mops/s: 78.1 Mchr/s: 8126.5 104
+[sc_ascii_l7] iters: 100 M s: 0.517990 Mops/s: 193.1 Mchr/s: 1351.4 7
+[sc_ascii_l8] iters: 100 M s: 0.644611 Mops/s: 155.1 Mchr/s: 1241.1 8
+[sc_ascii_10] iters: 100 M s: 0.728455 Mops/s: 137.3 Mchr/s: 1372.8 10
+[sc_utf_10]   iters: 100 M s: 0.698085 Mops/s: 143.2 Mchr/s: 1432.5 10
+[sc_ascii_52] iters: 100 M s: 2.699773 Mops/s: 37.0 Mchr/s: 1926.1 52
+[sc_utf_52]   iters: 100 M s: 2.942216 Mops/s: 34.0 Mchr/s: 1767.4 52
+[sc_utf_104]  iters: 100 M s: 6.291771 Mops/s: 15.9 Mchr/s: 1653.0 104
+Total: 40.503896 seconds
+
+real	0m40.753s
+user	0m40.491s
+sys	0m0.016s
+
+# with O2
+
+utf8-bench/src$ date; make clean; make; time ./utf8bench
+So 17 Jul 2022 12:46:56 CEST
+rm -rf *.o utf8bench
+cc -std=c99 -pedantic -Wall -O2 -c -o utf8bench.o utf8bench.c 
+cc -std=c99 -pedantic -Wall -O2 -o utf8bench utf8bench.o	
+[jb_ascii_l7] bytes: 7 chars: 7 expect: 7
+[jb_ascii_l8] bytes: 8 chars: 8 expect: 8
+[jb_ascii_10] bytes: 10 chars: 10 expect: 10
+[jb_utf8_10]  bytes: 11 chars: 10 expect: 10
+[cp_ascii_10] bytes: 10 chars: 10 expect: 10
+[cp_utf8_10]  bytes: 11 chars: 10 expect: 10
+[sc_ascii_10] bytes: 10 chars: 10 expect: 10
+[sc_utf8_10]  bytes: 11 chars: 10 expect: 10
+[jb_ascii_52] bytes: 52 chars: 52 expect: 52
+[jb_utf8_52]  bytes: 58 chars: 52 expect: 52
+[jb_utf8_104] bytes: 116 chars: 104 expect: 104
+[cp_ascii_52] bytes: 52 chars: 52 expect: 52
+[cp_utf8_52]  bytes: 58 chars: 52 expect: 52
+[sc_ascii_52] bytes: 52 chars: 52 expect: 52
+[sc_utf8_52]  bytes: 58 chars: 52 expect: 52
+[jb_ascii_l7] iters: 100 M s: 0.468413 Mops/s: 213.5 Mchr/s: 1494.4 7
+[jb_ascii_l8] iters: 100 M s: 0.010813 Mops/s: 9248.1 Mchr/s: 73985.0 8
+[jb_ascii_10] iters: 100 M s: 0.010880 Mops/s: 9191.2 Mchr/s: 91911.8 10
+[jb_utf_10]   iters: 100 M s: 0.010840 Mops/s: 9225.1 Mchr/s: 92250.9 10
+[jb_ascii_52] iters: 100 M s: 0.010934 Mops/s: 9145.8 Mchr/s: 475580.8 52
+[jb_utf_52]   iters: 100 M s: 0.011089 Mops/s: 9017.9 Mchr/s: 468933.2 52
+[jb_utf_104]  iters: 2 M s: 0.574970 Mops/s: 3.5 Mchr/s: 361.8 104
+[cp_ascii_l7] iters: 100 M s: 0.078902 Mops/s: 1267.4 Mchr/s: 8871.8 7
+[cp_ascii_l8] iters: 100 M s: 0.011528 Mops/s: 8674.5 Mchr/s: 69396.3 8
+[cp_ascii_10] iters: 100 M s: 0.011369 Mops/s: 8795.8 Mchr/s: 87958.5 10
+[cp_utf_10]   iters: 100 M s: 0.012605 Mops/s: 7933.4 Mchr/s: 87267.0 10
+[cp_ascii_52] iters: 100 M s: 0.011878 Mops/s: 8418.9 Mchr/s: 437784.1 52
+[cp_utf_52]   iters: 100 M s: 0.012390 Mops/s: 8071.0 Mchr/s: 419693.3 52
+[cp_utf_104]  iters: 100 M s: 0.011719 Mops/s: 8533.2 Mchr/s: 887447.7 104
+[sc_ascii_l7] iters: 100 M s: 0.383790 Mops/s: 260.6 Mchr/s: 1823.9 7
+[sc_ascii_l8] iters: 100 M s: 0.010674 Mops/s: 9368.6 Mchr/s: 74948.5 8
+[sc_ascii_10] iters: 100 M s: 0.010799 Mops/s: 9260.1 Mchr/s: 92601.2 10
+[sc_utf_10]   iters: 100 M s: 0.011214 Mops/s: 8917.4 Mchr/s: 89174.2 10
+[sc_ascii_52] iters: 100 M s: 0.010936 Mops/s: 9144.1 Mchr/s: 475493.8 52
+[sc_utf_52]   iters: 100 M s: 0.012094 Mops/s: 8268.6 Mchr/s: 429965.3 52
+[sc_utf_104]  iters: 100 M s: 3.065048 Mops/s: 32.6 Mchr/s: 3393.1 104
+Total: 4.752885 seconds
+
+real	0m4.988s
+user	0m4.752s
 sys	0m0.004s
