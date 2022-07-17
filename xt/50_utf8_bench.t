@@ -22,88 +22,127 @@ use Benchmark qw(:all);
 #my $enc = Encode::find_encoding('UTF-8')
 #  || die(q/find_encoding('UTF-8')/);
 
-my $octets;
+ok(1);
 
-$octets = 'Abcdefg'; # 7 Characters = 7 byte
-print "\n",'$octets: ',$octets,' chars: 7 bytes 7',"\n";
+my $string;
+my $v;
+
+$string = 'Abcdefg'; # 7 Characters = 7 byte
+print "\n",'$string: ',$string,' chars: 7 bytes:: 7',"\n";
 if (1) {
     cmpthese( -1, {
+        'length' => sub {
+            $v = length($string);
+        },
         'jb_chars' => sub {
-            my $v = &Wollmers::Utf8::XS::jb_chars($octets);
+            $v = &Wollmers::Utf8::XS::jb_chars($string);
         },
         'cp_chars' => sub {
-            my $v = &Wollmers::Utf8::XS::cp_chars($octets);
+            $v = &Wollmers::Utf8::XS::cp_chars($string);
         },
         'sc_chars' => sub {
-            my $v = &Wollmers::Utf8::XS::sc_chars($octets);
+            $v = &Wollmers::Utf8::XS::sc_chars($string);
         },
     });
 }
 
-$octets = 'Abcdefgh'; # 8 Characters = 8 byte
-print "\n",'$octets: ',$octets,' chars: 8 bytes 8',"\n";
+$string = 'Abcdefgh'; # 8 Characters = 8 byte
+print "\n",'$string: ',$string,' chars: 8 bytes: 8',"\n";
 if (1) {
     cmpthese( -1, {
+        'length' => sub {
+            $v = length($string);
+        },
         'jb_chars' => sub {
-            my $v = &Wollmers::Utf8::XS::jb_chars($octets);
+            $v = &Wollmers::Utf8::XS::jb_chars($string);
         },
         'cp_chars' => sub {
-            my $v = &Wollmers::Utf8::XS::cp_chars($octets);
+            $v = &Wollmers::Utf8::XS::cp_chars($string);
         },
         'sc_chars' => sub {
-            my $v = &Wollmers::Utf8::XS::sc_chars($octets);
+            $v = &Wollmers::Utf8::XS::sc_chars($string);
         },
     });
 }
 
-$octets = 'Chſerſplzon'; # 11 Characters = 13 byte
-        my $length = length($octets);
+$string = 'Chſerſplzon'; # 11 Characters = 13 byte
+
+if (0) {
+        my $length = length($string);
 
         is(
-            &Wollmers::Utf8::XS::jb_chars($octets),
+            &Wollmers::Utf8::XS::jb_chars($string),
             $length,
-            "jb_chars [$octets] -> " . $length
+            "jb_chars [$string] -> " . $length
         );
         is(
-            &Wollmers::Utf8::XS::cp_chars($octets),
+            &Wollmers::Utf8::XS::cp_chars($string),
             $length,
-            "cp_chars [$octets] -> " . $length
+            "cp_chars [$string] -> " . $length
         );
         is(
-            &Wollmers::Utf8::XS::sc_chars($octets),
+            &Wollmers::Utf8::XS::sc_chars($string),
             $length,
-            "sc_chars [$octets] -> " . $length
+            "sc_chars [$string] -> " . $length
         );
+}
 
-print "\n",'$octets: ',$octets,' chars: 11 bytes 13',"\n";
+print "\n",'$string: ',$string,' chars: 11 bytes: 13',"\n";
 if (1) {
     cmpthese( -1, {
+        'length' => sub {
+            $v = length($string);
+        },
         'jb_chars' => sub {
-            my $v = &Wollmers::Utf8::XS::jb_chars($octets);
+            $v = &Wollmers::Utf8::XS::jb_chars($string);
         },
         'cp_chars' => sub {
-            my $v = &Wollmers::Utf8::XS::cp_chars($octets);
+            $v = &Wollmers::Utf8::XS::cp_chars($string);
         },
         'sc_chars' => sub {
-            my $v = &Wollmers::Utf8::XS::sc_chars($octets);
+            $v = &Wollmers::Utf8::XS::sc_chars($string);
         },
     });
 }
 
-$octets = 'राज्यराज्य'; # 9 characters = 27 byte
+$string = 'राज्यराज्य'; # 9 characters = 27 byte
 
-print "\n",'$octets: ',$octets,' chars: 9 bytes 27',"\n";
+print "\n",'$string: ',$string,' chars: 9 bytes: 27',"\n";
 
 if (1) {
     cmpthese( -1, {
+        'length' => sub {
+            $v = length($string);
+        },
         'jb_chars' => sub {
-            my $v = &Wollmers::Utf8::XS::jb_chars($octets);
+            $v = &Wollmers::Utf8::XS::jb_chars($string);
         },
         'cp_chars' => sub {
-            my $v = &Wollmers::Utf8::XS::cp_chars($octets);
+            $v = &Wollmers::Utf8::XS::cp_chars($string);
         },
         'sc_chars' => sub {
-            my $v = &Wollmers::Utf8::XS::sc_chars($octets);
+            $v = &Wollmers::Utf8::XS::sc_chars($string);
+        },
+    });
+}
+
+$string = 'Chſerſplzon' x 8; # 11*8=88 Characters = 13*8=104 byte
+
+print "\n",'$string: ','Chſerſplzon x 8',' chars: 88 bytes: 104',"\n";
+
+if (1) {
+    cmpthese( -1, {
+        'length' => sub {
+            $v = length($string);
+        },
+        'jb_chars' => sub {
+            $v = &Wollmers::Utf8::XS::jb_chars($string);
+        },
+        'cp_chars' => sub {
+            $v = &Wollmers::Utf8::XS::cp_chars($string);
+        },
+        'sc_chars' => sub {
+            $v = &Wollmers::Utf8::XS::sc_chars($string);
         },
     });
 }
